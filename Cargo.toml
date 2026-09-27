@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = ["common/protocol", "tools/vrcft-cli", "client/core"]
+
+[workspace.package]
+version = "1.2.0"
+edition = "2024"
+license = "MIT"
+authors = ["Maverick"]
+
+[workspace.dependencies]
+ftbridge_protocol = { path = "common/protocol" }
+
+[profile.distribution]
+inherits = "release"
+lto = true

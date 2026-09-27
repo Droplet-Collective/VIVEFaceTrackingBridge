@@ -1,0 +1,19 @@
+platform-tools
+ALVR
+VRCFT-ALVR
+CLAUDE.md
+.vscode/
+
+# Local only build files
+*.localonly
+# Rust
+target/
+
+# Android / Gradle
+client/.gradle/
+client/build/
+client/*/build/
+# IDE (VS Code Java) output
+client/*/bin/
+client/local.properties
+client/app/src/main/jniLibs/

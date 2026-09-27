@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Same signing as the service app (client/app): the control interface it talks to is
+// guarded by a signature permission
+def releaseKeystore = System.getenv('FTBRIDGE_KEYSTORE')
+
+android {
+    namespace 'dev.maverick.ftbridge.settings'
+    compileSdk 31
+    buildToolsVersion '36.0.0'
+
+    defaultConfig {
+        applicationId 'dev.maverick.ftbridge.settings'
+        minSdk 29
+        targetSdk 31
+        // Shared with the service app, see gradle.properties
+        versionName ftbridgeVersion
+        versionCode versionName.tokenize('.').collect { it as Integer }.inject(0) { acc, part -> acc * 100 + part }
+    }
+
+    signingConfigs {
+        if (releaseKeystore) {
+            release {
+                storeFile file(releaseKeystore)
+                storePassword System.getenv('FTBRIDGE_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('FTBRIDGE_KEY_ALIAS')
+                keyPassword System.getenv('FTBRIDGE_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig releaseKeystore ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        disable 'ExpiredTargetSdkVersion'
+    }
+}
+
+dependencies {
+    implementation project(':control')
+    implementation project(':companion')
+}
